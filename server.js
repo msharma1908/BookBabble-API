@@ -7,8 +7,6 @@ const bodyParser = require("body-parser");
 const config = require("./knexfile.js");
 const knex = require("knex")(config);
 
-// const params = require("params");
-
 //middleware
 app.use(express.json());
 app.use(bodyParser.json());
@@ -54,17 +52,14 @@ app.get("/details-and-reviews/:title", async (req, res) => {
     const title = req.params.title;
     const bookId = Number(title);
 
-    // Check if bookId is a valid number
     if (isNaN(bookId)) {
       res.status(400).send("Invalid book ID");
       return;
     }
 
     const bookDetails = await knex("books_database").where("id", bookId);
-    // console.log("Book Details:", bookDetails); // Log book details
 
     const bookReviews = await knex("book_reviews").where("book_id", bookId);
-    // console.log("Book Reviews:", bookReviews); // Log book reviews
 
     res.json({ details: bookDetails, reviews: bookReviews });
   } catch (error) {
