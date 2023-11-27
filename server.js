@@ -37,11 +37,6 @@ app.get("/search/:title", async (req, res) => {
   }
 });
 
-// app.get("/search/:title", async (req, res) => {
-//   const data = await knex("books_database").where("title", req.params.title);
-//   res.json(data);
-// });
-
 app.get("/details/:title", async (req, res) => {
   const data = await knex("book_reviews").where("book_id", req.params.title);
   res.json(data);
