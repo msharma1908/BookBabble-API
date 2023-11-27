@@ -5,7 +5,7 @@
 
 exports.up = function (knex) {
   return knex.schema.createTable("books", function (table) {
-    table.increments("id"); // pk, auto increment
+    table.increments("id");
     table.string("title");
     table.string("author");
     table.string("rating");
