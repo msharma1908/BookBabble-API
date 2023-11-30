@@ -6,11 +6,21 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const config = require("./knexfile.js");
 const knex = require("knex")(config);
+const verifyJWT = require("./middleware/verifyJWT.js");
+const cookieParser = require("cookie-parser");
 
 //middleware
 app.use(express.json());
+
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(cors());
+
+// routes
+app.use("/register", require("./routes/register.js"));
+app.use("/auth", require("./routes/auth.js"));
+app.use("/refresh", require("./routes/refresh.js"));
+app.use("/logout", require("./routes/logout.js"));
 
 app.get("/", async (req, res) => {
   try {
@@ -60,6 +70,8 @@ app.get("/details-and-reviews/:title", async (req, res) => {
   }
 });
 
+app.use(verifyJWT);
+
 app.post("/details-and-reviews/:title", async (req, res) => {
   try {
     const title = req.params.title;
@@ -72,7 +84,6 @@ app.post("/details-and-reviews/:title", async (req, res) => {
 
     const { review } = req.body;
 
-    // Save the review to the database
     await knex("book_reviews").insert({ book_id: bookId, review });
 
     res.status(201).send("Review added successfully");

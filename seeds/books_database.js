@@ -334,7 +334,6 @@ const book_db = [
 ];
 
 exports.seed = async function (knex) {
-  // Deletes ALL existing entries
   await knex("books_database").del(book_db);
   await knex("books_database").insert(book_db);
 };

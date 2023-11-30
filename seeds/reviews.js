@@ -435,7 +435,6 @@ const reviews = [
 ];
 
 exports.seed = async function (knex) {
-  // Deletes ALL existing entries
   await knex("book_reviews").del(reviews);
   await knex("book_reviews").insert(reviews);
 };
