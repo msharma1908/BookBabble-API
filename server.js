@@ -37,11 +37,6 @@ app.get("/search/:title", async (req, res) => {
   }
 });
 
-app.get("/details/:title", async (req, res) => {
-  const data = await knex("book_reviews").where("book_id", req.params.title);
-  res.json(data);
-});
-
 app.get("/details-and-reviews/:title", async (req, res) => {
   try {
     const title = req.params.title;
@@ -61,6 +56,28 @@ app.get("/details-and-reviews/:title", async (req, res) => {
     res
       .status(500)
       .send("Error occurred while fetching book details and reviews");
+    console.log(error);
+  }
+});
+
+app.post("/details-and-reviews/:title", async (req, res) => {
+  try {
+    const title = req.params.title;
+    const bookId = Number(title);
+
+    if (isNaN(bookId)) {
+      res.status(400).send("Invalid book ID");
+      return;
+    }
+
+    const { review } = req.body;
+
+    // Save the review to the database
+    await knex("book_reviews").insert({ book_id: bookId, review });
+
+    res.status(201).send("Review added successfully");
+  } catch (error) {
+    res.status(500).send("Error occurred while adding the review");
     console.log(error);
   }
 });
